@@ -6,6 +6,7 @@ import { newId, referenceCode } from './ids.js';
 import { Queue } from './waitlistQueue.js';
 import { DomainError } from './errors.js';
 import { summarizeEvent } from './eventSearch.js';
+import { parseIsoDate } from './dates.js';
 
 export const MAX_TICKETS_PER_BOOKING = 10;
 
@@ -49,10 +50,7 @@ function getEvent(store, eventId) {
 }
 
 export function createEvent(store, { title, city, venue = '', startsAt, organizerId }) {
-  const date = new Date(startsAt);
-  if (Number.isNaN(date.getTime())) {
-    throw new DomainError('VALIDATION', 'startsAt must be a valid date');
-  }
+  const date = new Date(parseIsoDate(startsAt, 'startsAt'));
   const event = {
     id: newId(),
     organizerId,
@@ -94,6 +92,12 @@ export function publishEvent(store, eventId) {
   return event;
 }
 
+export function unpublishEvent(store, eventId) {
+  const event = getEvent(store, eventId);
+  event.status = 'draft';
+  return event;
+}
+
 // What the public event list is built from. Drafts are hidden unless asked for.
 export function listEventSummaries(store, { publishedOnly = true } = {}) {
   return [...store.events.values()]
@@ -107,6 +111,10 @@ export function seatsLeft(tier) {
 
 export function bookTickets(store, tierId, userId, quantity) {
   const tier = getTier(store, tierId);
+  const event = getEvent(store, tier.eventId);
+  if (event.status !== 'published') {
+    throw new DomainError('INVALID_STATE', 'Tickets can only be booked for published events');
+  }
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_TICKETS_PER_BOOKING) {
     throw new DomainError('VALIDATION', `quantity must be between 1 and ${MAX_TICKETS_PER_BOOKING}`);
   }

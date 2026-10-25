@@ -36,7 +36,23 @@
 
 ### S04: As an organizer, I want to publish and unpublish an event, so that I control when it goes public
 
-*Written by you, in pairs, during the Build 2 class. Add your three criteria here before you paste the AI prompt below.*
+**1. Publish an event successfully**
+
+- **Given** a draft event with at least one ticket tier,
+- **When** the organizer publishes the event,
+- **Then** its status changes to `published` and it appears on the public event list.
+
+**2. Prevent publishing without ticket tiers**
+
+- **Given** a draft event with no ticket tiers,
+- **When** the organizer attempts to publish it,
+- **Then** the system returns an `INVALID_STATE` error, the event remains a draft, and it does not appear on the public list.
+
+**3. Unpublish an event that has existing bookings**
+
+- **Given** a published event with existing bookings,
+- **When** the organizer unpublishes the event,
+- **Then** its status changes to `draft`, it disappears from the public event list, and existing bookings remain valid without automatic cancellation or refunds.
 
 ### S05: As an attendee, I want to search, filter and sort published events, so that I can find one I like
 
