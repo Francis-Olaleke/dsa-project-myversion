@@ -5,6 +5,7 @@ import {
   createStore,
   createEvent,
   addTier,
+  publishEvent,
   bookTickets,
   cancelBooking,
   joinWaitlist,
@@ -24,6 +25,7 @@ const event = createEvent(store, {
   organizerId: 'organizer-1',
 });
 const tier = addTier(store, event.id, { name: 'General', priceCents: 500_000, capacity: 3 });
+publishEvent(store, event.id);
 console.log(`Created "${event.title}" with ${tier.capacity} seats in ${tier.name}.\n`);
 
 function attempt(label, action) {
