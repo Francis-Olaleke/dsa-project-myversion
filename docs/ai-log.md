@@ -15,4 +15,9 @@ Every time you give an AI tool a significant prompt, add an entry. Three lines e
 - **What came back:** The supplied criteria were added verbatim, and inventory tests were made explicit for successful publishing, rejected publishing without tiers, and unpublishing an event with a pending booking while keeping the booking unchanged.
 - **What was wrong (or "nothing"):** The earlier audit correctly recorded that the criteria were still missing at that time. The student has now supplied them; the S04 documentation and tests cover all three criteria.
 
+## Build 3
 
+### Prompt 1: Build 3 prompt (docs/build-3.md)
+- **What I asked:** Add the architecture diagrams, booking state machine, Node HTTP router/server, configuration, startup script, and tests.
+- **What came back:** A layered architecture document, explicit booking transitions, static-file HTTP server, `/health` route, startup configuration, and `node:test` coverage.
+- **What was wrong (or "nothing"):** The first server draft relied on an implicit response/request property for HEAD handling and had redundant error-status logic; both were simplified. Added a regression test proving static requests cannot escape `public/`.
